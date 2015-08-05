@@ -70,16 +70,17 @@ class Lp_RPC_LPClient
     {
         $this->_setJsonHandler(new Lp_RPC_JSON_LPJSON($authKey));
         $this->_setServerUrl($serverUrl);
+        $me = $this;
 
         $this->prepareParamsAndInvokeCallback = function (
             $prepareParamsMethodName,
             $invokeObjectName,
             array $methodArgs
-        ) {
+        ) use($me) {
             $result = call_user_func_array(
-                [$this, '_prepareParamsAndInvoke'],
+                array($me, '_prepareParamsAndInvoke'),
                 array_merge(
-                    [$prepareParamsMethodName, $invokeObjectName],
+                    array($prepareParamsMethodName, $invokeObjectName),
                     $methodArgs
                 )
             );
@@ -184,9 +185,9 @@ class Lp_RPC_LPClient
         $invokeObjectName        = 'user';
 
         return call_user_func_array(
-            [$this, '_prepareParamsAndInvoke'],
+            array($this, '_prepareParamsAndInvoke'),
             array_merge(
-                [$prepareParamsMethodName, $invokeObjectName],
+                arary($prepareParamsMethodName, $invokeObjectName),
                 func_get_args()
             )
         );
@@ -247,7 +248,7 @@ class Lp_RPC_LPClient
     public function getDeviceFilterCriteriaCalcByDeviceFilters($deviceFilterOrArrayOfDeviceFilters)
     {
         if (!is_array($deviceFilterOrArrayOfDeviceFilters)) {
-            $deviceFilterOrArrayOfDeviceFilters = [$deviceFilterOrArrayOfDeviceFilters];
+            $deviceFilterOrArrayOfDeviceFilters = array($deviceFilterOrArrayOfDeviceFilters);
         }
 
         if (!empty($deviceFilterOrArrayOfDeviceFilters)) {
@@ -256,7 +257,7 @@ class Lp_RPC_LPClient
                 $params =
                     $this->_jsonHandler->prepareDeviceFilterCalcCriteriaCall($deviceFilterOrArrayOfDeviceFilters
                     );
-                $result = $this->_invoke('deviceFilter', [$params]);
+                $result = $this->_invoke('deviceFilter', array($params));
                 $this->_validate($result);
 
                 return $this->_jsonHandler->parseDeviceFilterCalcCriteriaResult($deviceFilterOrArrayOfDeviceFilters,
@@ -823,7 +824,7 @@ class Lp_RPC_LPClient
      */
     protected function _invoke($method, $params)
     {
-        $rpc            = [];
+        $rpc            = array();
         $rpc['jsonrpc'] = '2.0';
         $rpc['method']  = $method;
         $rpc['params']  = $params;
@@ -901,7 +902,7 @@ class Lp_RPC_LPClient
      *
      * @throws Exception
      */
-    private function _prepareParamsAndInvoke()
+    public function _prepareParamsAndInvoke()
     {
         $functionArgs = func_get_args();
 
@@ -910,11 +911,11 @@ class Lp_RPC_LPClient
 
         try {
             $params = call_user_func_array(
-                [$this->_jsonHandler, $prepareParamsMethodName],
+                array($this->_jsonHandler, $prepareParamsMethodName),
                 $functionArgs
             );
 
-            $result = $this->_invoke($invokeObjectName, [$params]);
+            $result = $this->_invoke($invokeObjectName, array($params));
 
             $this->_validate($result);
         } catch (Exception $e) {
@@ -940,11 +941,11 @@ class Lp_RPC_LPClient
 
         try {
             $params = call_user_func_array(
-                [$this->_jsonHandler, $prepareParamsMethodName],
+                array($this->_jsonHandler, $prepareParamsMethodName),
                 $functionArgs
             );
 
-            $result = $this->_invoke($invokeObjectName, [$params]);
+            $result = $this->_invoke($invokeObjectName, array($params));
 
             // @NB: this debug is placed here intentionally
             // (this method should only be used for testing purposes)
