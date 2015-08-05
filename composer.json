@@ -1,5 +1,5 @@
 {
-    "name" : "littlepostman/sdk-server-php",
+    "name" : "wegewerk-mdt/sdk-server-php",
     "type" : "library",
     "description" : "Little Postman Server SDK for PHP",
     "keywords" : ["little postman", "push notifications", "push", "sdk"],
